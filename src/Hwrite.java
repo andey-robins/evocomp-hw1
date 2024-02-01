@@ -1,3 +1,4 @@
+
 /******************************************************************************
 *  Hwrite Class					    Final Version prepared by Hal Stringer, UCF
 *
@@ -21,47 +22,47 @@ import java.text.*;
 
 public class Hwrite {
 
-/*******************************************************************************
-*                       STATIC VARIABLES (CLASS VARIABLES)                     *
-*******************************************************************************/
+	/*******************************************************************************
+	 * STATIC VARIABLES (CLASS VARIABLES) *
+	 *******************************************************************************/
 
-//	Variable "pad" set to 50 spaces - determines maximum field size.
-//	To increase maximum field length, add more spaces to the pad string.
+	// Variable "pad" set to 50 spaces - determines maximum field size.
+	// To increase maximum field length, add more spaces to the pad string.
 
 	private static final String pad = "                                                  ";
 
-/*******************************************************************************
-*                     STATIC PRINTING METHODS (CLASS METHODS)                  *
-*******************************************************************************/
+	/*******************************************************************************
+	 * STATIC PRINTING METHODS (CLASS METHODS) *
+	 *******************************************************************************/
 
-	//	Write Left Justified Integer
+	// Write Left Justified Integer
 	public static void left(int data, int fieldLength, FileWriter output) throws java.io.IOException {
 		String dataText = Integer.toString(data);
-		if (fieldLength < dataText.length()){
+		if (fieldLength < dataText.length()) {
 			fieldLengthError(fieldLength, output);
 			return;
 		}
-		String padding = pad.substring(0, fieldLength-dataText.length());
+		String padding = pad.substring(0, fieldLength - dataText.length());
 		output.write(dataText + padding);
 		return;
 	}
 
-	//	Write Right Justified Integer
+	// Write Right Justified Integer
 	public static void right(int data, int fieldLength, FileWriter output) throws java.io.IOException {
 		String dataText = Integer.toString(data);
-		if (fieldLength < dataText.length()){
+		if (fieldLength < dataText.length()) {
 			fieldLengthError(fieldLength, output);
 			return;
 		}
-		String padding = pad.substring(0, fieldLength-dataText.length());
+		String padding = pad.substring(0, fieldLength - dataText.length());
 		output.write(padding + dataText);
 		return;
 	}
 
-	//	Write Centered Integer
+	// Write Centered Integer
 	public static void center(int data, int fieldLength, FileWriter output) throws java.io.IOException {
 		String dataText = Integer.toString(data);
-		if (fieldLength < dataText.length()){
+		if (fieldLength < dataText.length()) {
 			fieldLengthError(fieldLength, output);
 			return;
 		}
@@ -74,36 +75,36 @@ public class Hwrite {
 		return;
 	}
 
-/*******************************************************************************/
+	/*******************************************************************************/
 
-	//	Write Left Justified Double - Default Decimal Places
+	// Write Left Justified Double - Default Decimal Places
 	public static void left(double data, int fieldLength, FileWriter output) throws java.io.IOException {
 		String dataText = Double.toString(data);
-		if (fieldLength < dataText.length()){
+		if (fieldLength < dataText.length()) {
 			fieldLengthError(fieldLength, output);
 			return;
 		}
-		String padding = pad.substring(0, fieldLength-dataText.length());
+		String padding = pad.substring(0, fieldLength - dataText.length());
 		output.write(dataText + padding);
 		return;
 	}
 
-	//	Write Right Justified Double - Default Decimal Places
+	// Write Right Justified Double - Default Decimal Places
 	public static void right(double data, int fieldLength, FileWriter output) throws java.io.IOException {
 		String dataText = Double.toString(data);
-		if (fieldLength < dataText.length()){
+		if (fieldLength < dataText.length()) {
 			fieldLengthError(fieldLength, output);
 			return;
 		}
-		String padding = pad.substring(0, fieldLength-dataText.length());
+		String padding = pad.substring(0, fieldLength - dataText.length());
 		output.write(padding + dataText);
 		return;
 	}
 
-	//	Write Centered Double - Default Decimal Places
+	// Write Centered Double - Default Decimal Places
 	public static void center(double data, int fieldLength, FileWriter output) throws java.io.IOException {
 		String dataText = Double.toString(data);
-		if (fieldLength < dataText.length()){
+		if (fieldLength < dataText.length()) {
 			fieldLengthError(fieldLength, output);
 			return;
 		}
@@ -116,36 +117,36 @@ public class Hwrite {
 		return;
 	}
 
-/*******************************************************************************/
+	/*******************************************************************************/
 
-	//	Write Left Justified Double - User Specified Decimal Places
+	// Write Left Justified Double - User Specified Decimal Places
 	public static void left(double data, int fieldLength, int places, FileWriter output) throws java.io.IOException {
 		String dataText = fixDecimals(data, places);
-		if (fieldLength < dataText.length()){
+		if (fieldLength < dataText.length()) {
 			fieldLengthError(fieldLength, output);
 			return;
 		}
-		String padding = pad.substring(0, fieldLength-dataText.length());
+		String padding = pad.substring(0, fieldLength - dataText.length());
 		output.write(dataText + padding);
 		return;
 	}
 
-	//	Write Right Justified Double - User Specified Decimal Places
+	// Write Right Justified Double - User Specified Decimal Places
 	public static void right(double data, int fieldLength, int places, FileWriter output) throws java.io.IOException {
 		String dataText = fixDecimals(data, places);
-		if (fieldLength < dataText.length()){
+		if (fieldLength < dataText.length()) {
 			fieldLengthError(fieldLength, output);
 			return;
 		}
-		String padding = pad.substring(0, fieldLength-dataText.length());
+		String padding = pad.substring(0, fieldLength - dataText.length());
 		output.write(padding + dataText);
 		return;
 	}
 
-	//	Write Centered Double - User Specified Decimal Places
+	// Write Centered Double - User Specified Decimal Places
 	public static void center(double data, int fieldLength, int places, FileWriter output) throws java.io.IOException {
 		String dataText = fixDecimals(data, places);
-		if (fieldLength < dataText.length()){
+		if (fieldLength < dataText.length()) {
 			fieldLengthError(fieldLength, output);
 			return;
 		}
@@ -158,33 +159,33 @@ public class Hwrite {
 		return;
 	}
 
-/*******************************************************************************/
+	/*******************************************************************************/
 
-	//	Write Left Justified String
+	// Write Left Justified String
 	public static void left(String dataText, int fieldLength, FileWriter output) throws java.io.IOException {
-		if (fieldLength < dataText.length()){
+		if (fieldLength < dataText.length()) {
 			fieldLengthError(fieldLength, output);
 			return;
 		}
-		String padding = pad.substring(0, fieldLength-dataText.length());
+		String padding = pad.substring(0, fieldLength - dataText.length());
 		output.write(dataText + padding);
 		return;
 	}
 
-	//	Write Right Justified String
+	// Write Right Justified String
 	public static void right(String dataText, int fieldLength, FileWriter output) throws java.io.IOException {
-		if (fieldLength < dataText.length()){
+		if (fieldLength < dataText.length()) {
 			fieldLengthError(fieldLength, output);
 			return;
 		}
-		String padding = pad.substring(0, fieldLength-dataText.length());
+		String padding = pad.substring(0, fieldLength - dataText.length());
 		output.write(padding + dataText);
 		return;
 	}
 
-	//	Write Centered String
+	// Write Centered String
 	public static void center(String dataText, int fieldLength, FileWriter output) throws java.io.IOException {
-		if (fieldLength < dataText.length()){
+		if (fieldLength < dataText.length()) {
 			fieldLengthError(fieldLength, output);
 			return;
 		}
@@ -197,19 +198,19 @@ public class Hwrite {
 		return;
 	}
 
-/*******************************************************************************/
+	/*******************************************************************************/
 
 	private static void fieldLengthError(int fieldLength, FileWriter output) throws java.io.IOException {
-		for(int i=1; i<=fieldLength; ++i){
+		for (int i = 1; i <= fieldLength; ++i) {
 			output.write("#");
 		}
 		return;
 	}
 
-	private static String fixDecimals(double data, int places){
-		data=Math.round(data * Math.pow(10,places)) / Math.pow(10,places);
+	private static String fixDecimals(double data, int places) {
+		data = Math.round(data * Math.pow(10, places)) / Math.pow(10, places);
 		String dataText = Double.toString(data);
-		return(dataText);
+		return (dataText);
 	}
 
-}   // End of Hwrite.java
+} // End of Hwrite.java

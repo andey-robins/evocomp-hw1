@@ -1,3 +1,4 @@
+
 /******************************************************************************
 *  Hprint Class					    Final Version prepared by Hal Stringer, UCF
 *
@@ -18,45 +19,47 @@ import java.text.*;
 
 public class Hprint {
 
-/*******************************************************************************
-*                       STATIC VARIABLES (CLASS VARIABLES)                     *
-*******************************************************************************/
+	/*******************************************************************************
+	 * STATIC VARIABLES (CLASS VARIABLES) *
+	 *******************************************************************************/
 
-//	Variable "pad" set to 50 spaces - determines maximum field size.
-//	To increase maximum field length, add more spaces to the pad string.
+	// Variable "pad" set to 50 spaces - determines maximum field size.
+	// To increase maximum field length, add more spaces to the pad string.
 
 	private static final String pad = "                                                  ";
 
-/*******************************************************************************
-*                     STATIC PRINTING METHODS (CLASS METHODS)                  *
-*******************************************************************************/
+	/*******************************************************************************
+	 * STATIC PRINTING METHODS (CLASS METHODS) *
+	 *******************************************************************************/
 
-	//	Print Left Justified Integer
-	public static void left(int data, int fieldLength){
+	// Print Left Justified Integer
+	public static void left(int data, int fieldLength) {
 		String dataText = Integer.toString(data);
-		if (fieldLength < dataText.length()){
+		if (fieldLength < dataText.length()) {
 			fieldLengthError(fieldLength);
 			return;
 		}
-		String padding = pad.substring(0, fieldLength-dataText.length());
+		String padding = pad.substring(0, fieldLength - dataText.length());
 		System.out.print(dataText + padding);
 		return;
 	}
-	//	Print Right Justified Integer
-	public static void right(int data, int fieldLength){
+
+	// Print Right Justified Integer
+	public static void right(int data, int fieldLength) {
 		String dataText = Integer.toString(data);
-		if (fieldLength < dataText.length()){
+		if (fieldLength < dataText.length()) {
 			fieldLengthError(fieldLength);
 			return;
 		}
-		String padding = pad.substring(0, fieldLength-dataText.length());
+		String padding = pad.substring(0, fieldLength - dataText.length());
 		System.out.print(padding + dataText);
 		return;
 	}
-	//	Print Centered Integer
-	public static void center(int data, int fieldLength){
+
+	// Print Centered Integer
+	public static void center(int data, int fieldLength) {
 		String dataText = Integer.toString(data);
-		if (fieldLength < dataText.length()){
+		if (fieldLength < dataText.length()) {
 			fieldLengthError(fieldLength);
 			return;
 		}
@@ -69,34 +72,36 @@ public class Hprint {
 		return;
 	}
 
-/*******************************************************************************/
+	/*******************************************************************************/
 
-	//	Print Left Justified Double - Default Decimal Places
-	public static void left(double data, int fieldLength){
+	// Print Left Justified Double - Default Decimal Places
+	public static void left(double data, int fieldLength) {
 		String dataText = Double.toString(data);
-		if (fieldLength < dataText.length()){
+		if (fieldLength < dataText.length()) {
 			fieldLengthError(fieldLength);
 			return;
 		}
-		String padding = pad.substring(0, fieldLength-dataText.length());
+		String padding = pad.substring(0, fieldLength - dataText.length());
 		System.out.print(dataText + padding);
 		return;
 	}
-	//	Print Right Justified Double - Default Decimal Places
-	public static void right(double data, int fieldLength){
+
+	// Print Right Justified Double - Default Decimal Places
+	public static void right(double data, int fieldLength) {
 		String dataText = Double.toString(data);
-		if (fieldLength < dataText.length()){
+		if (fieldLength < dataText.length()) {
 			fieldLengthError(fieldLength);
 			return;
 		}
-		String padding = pad.substring(0, fieldLength-dataText.length());
+		String padding = pad.substring(0, fieldLength - dataText.length());
 		System.out.print(padding + dataText);
 		return;
 	}
-	//	Print Centered Double - Default Decimal Places
-	public static void center(double data, int fieldLength){
+
+	// Print Centered Double - Default Decimal Places
+	public static void center(double data, int fieldLength) {
 		String dataText = Double.toString(data);
-		if (fieldLength < dataText.length()){
+		if (fieldLength < dataText.length()) {
 			fieldLengthError(fieldLength);
 			return;
 		}
@@ -109,34 +114,36 @@ public class Hprint {
 		return;
 	}
 
-/*******************************************************************************/
+	/*******************************************************************************/
 
-	//	Print Left Justified Double - User Specified Decimal Places
-	public static void left(double data, int fieldLength, int places){
+	// Print Left Justified Double - User Specified Decimal Places
+	public static void left(double data, int fieldLength, int places) {
 		String dataText = fixDecimals(data, places);
-		if (fieldLength < dataText.length()){
+		if (fieldLength < dataText.length()) {
 			fieldLengthError(fieldLength);
 			return;
 		}
-		String padding = pad.substring(0, fieldLength-dataText.length());
+		String padding = pad.substring(0, fieldLength - dataText.length());
 		System.out.print(dataText + padding);
 		return;
 	}
-	//	Print Right Justified Double - User Specified Decimal Places
-	public static void right(double data, int fieldLength, int places){
+
+	// Print Right Justified Double - User Specified Decimal Places
+	public static void right(double data, int fieldLength, int places) {
 		String dataText = fixDecimals(data, places);
-		if (fieldLength < dataText.length()){
+		if (fieldLength < dataText.length()) {
 			fieldLengthError(fieldLength);
 			return;
 		}
-		String padding = pad.substring(0, fieldLength-dataText.length());
+		String padding = pad.substring(0, fieldLength - dataText.length());
 		System.out.print(padding + dataText);
 		return;
 	}
-	//	Print Centered Double - User Specified Decimal Places
-	public static void center(double data, int fieldLength, int places){
+
+	// Print Centered Double - User Specified Decimal Places
+	public static void center(double data, int fieldLength, int places) {
 		String dataText = fixDecimals(data, places);
-		if (fieldLength < dataText.length()){
+		if (fieldLength < dataText.length()) {
 			fieldLengthError(fieldLength);
 			return;
 		}
@@ -149,31 +156,33 @@ public class Hprint {
 		return;
 	}
 
-/*******************************************************************************/
+	/*******************************************************************************/
 
-	//	Print Left Justified String
-	public static void left(String dataText, int fieldLength){
-		if (fieldLength < dataText.length()){
+	// Print Left Justified String
+	public static void left(String dataText, int fieldLength) {
+		if (fieldLength < dataText.length()) {
 			fieldLengthError(fieldLength);
 			return;
 		}
-		String padding = pad.substring(0, fieldLength-dataText.length());
+		String padding = pad.substring(0, fieldLength - dataText.length());
 		System.out.print(dataText + padding);
 		return;
 	}
-	//	Print Right Justified String
-	public static void right(String dataText, int fieldLength){
-		if (fieldLength < dataText.length()){
+
+	// Print Right Justified String
+	public static void right(String dataText, int fieldLength) {
+		if (fieldLength < dataText.length()) {
 			fieldLengthError(fieldLength);
 			return;
 		}
-		String padding = pad.substring(0, fieldLength-dataText.length());
+		String padding = pad.substring(0, fieldLength - dataText.length());
 		System.out.print(padding + dataText);
 		return;
 	}
-	//	Print Centered String
-	public static void center(String dataText, int fieldLength){
-		if (fieldLength < dataText.length()){
+
+	// Print Centered String
+	public static void center(String dataText, int fieldLength) {
+		if (fieldLength < dataText.length()) {
 			fieldLengthError(fieldLength);
 			return;
 		}
@@ -186,19 +195,19 @@ public class Hprint {
 		return;
 	}
 
-/*******************************************************************************/
+	/*******************************************************************************/
 
-	private static void fieldLengthError(int fieldLength){
-		for(int i=1; i<=fieldLength; ++i){
+	private static void fieldLengthError(int fieldLength) {
+		for (int i = 1; i <= fieldLength; ++i) {
 			System.out.print("#");
 		}
 		return;
 	}
 
-	private static String fixDecimals(double data, int places){
-		data=Math.round(data * Math.pow(10,places)) / Math.pow(10,places);
+	private static String fixDecimals(double data, int places) {
+		data = Math.round(data * Math.pow(10, places)) / Math.pow(10, places);
 		String dataText = Double.toString(data);
-		return(dataText);
+		return (dataText);
 	}
 
-}   // End of Hprint.java
+} // End of Hprint.java
