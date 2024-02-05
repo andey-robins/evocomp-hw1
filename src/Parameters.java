@@ -15,6 +15,7 @@ public class Parameters {
 	 *******************************************************************************/
 
 	public static String expID;
+	public static String dataRepresentation;
 	public static String problemType;
 
 	public static String dataInputFileName;
@@ -49,6 +50,7 @@ public class Parameters {
 		BufferedReader parmInput = new BufferedReader(new FileReader(parmfilename));
 
 		expID = parmInput.readLine().substring(30);
+		dataRepresentation = parmInput.readLine().substring(30);
 		problemType = parmInput.readLine().substring(30);
 
 		dataInputFileName = parmInput.readLine().substring(30);
@@ -90,6 +92,7 @@ public class Parameters {
 
 		output.write("Experiment ID                :  " + expID + "\n");
 		output.write("Problem Type                 :  " + problemType + "\n");
+		output.write("Data Representation          :  " + dataRepresentation + "\n");
 
 		output.write("Data Input File Name         :  " + dataInputFileName + "\n");
 
