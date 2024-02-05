@@ -2,7 +2,7 @@ build:
 	javac *.java
 
 run: build
-	java Search parameters/pointscatter.params
+	java Search params/pointscatter.params
 
 clean:
 	rm -f *.class
