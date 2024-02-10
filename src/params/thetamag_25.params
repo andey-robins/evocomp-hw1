@@ -12,7 +12,7 @@ Crossover Rate (4)           :1.0
 Mutation Type (5)            :1
 Mutation Rate (6)            :.01
 Random Number Seed           :65536
-Number of Genes/Points (7)   :14
+Number of Genes/Points (7)   :50
 Size of Genes (18)           :10
 
 Notes:
