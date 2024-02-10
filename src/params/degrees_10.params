@@ -2,8 +2,8 @@ Experiment ID                :pointscatter
 Data Representation          :degrees
 Problem Type                 :PS
 Data Input File Name         :
-Number of Runs               :100
-Generations per Run          :200
+Number of Runs               :50
+Generations per Run          :400
 Population Size              :200
 Selection Method (1)         :1
 Fitness Scaling Type (2)     :0

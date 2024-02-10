@@ -24,8 +24,8 @@ public class PointScatter extends FitnessFunction {
 
         if (Parameters.dataRepresentation.equals("xycart")) {
             for (int i = 0; i < Parameters.numGenes; i += 2) {
-                double x1 = mapBinary(X.getPosIntGeneValue(i), Parameters.geneSize, 0.0, 1.0);
-                double y1 = mapBinary(X.getPosIntGeneValue(i + 1), Parameters.geneSize, 0.0, 1.0);
+                double x1 = mapBinary(X.getPosIntGeneValue(i), Parameters.geneSize, -1.0, 1.0);
+                double y1 = mapBinary(X.getPosIntGeneValue(i + 1), Parameters.geneSize, -1.0, 1.0);
 
                 if (isOutsideUnitCircle(x1, y1)) {
                     X.rawFitness = 0.0;
@@ -33,8 +33,8 @@ public class PointScatter extends FitnessFunction {
                 }
 
                 for (int j = i + 2; j < Parameters.numGenes; j += 2) {
-                    double x2 = mapBinary(X.getPosIntGeneValue(j), Parameters.geneSize, 0.0, 1.0);
-                    double y2 = mapBinary(X.getPosIntGeneValue(j + 1), Parameters.geneSize, 0.0, 1.0);
+                    double x2 = mapBinary(X.getPosIntGeneValue(j), Parameters.geneSize, -1.0, 1.0);
+                    double y2 = mapBinary(X.getPosIntGeneValue(j + 1), Parameters.geneSize, -1.0, 1.0);
 
                     if (isOutsideUnitCircle(x2, y2)) {
                         X.rawFitness = 0.0;
@@ -133,12 +133,15 @@ public class PointScatter extends FitnessFunction {
      * Currently only writes best fit information to best_fit.csv
      */
     public void onFinish() {
+        writeChromoToCsv("best_fit.csv", Search.bestOverAllChromo);
+    }
 
+    public static void writeChromoToCsv(String fname, Chromo chromo) {
         // Define generic functions for converting from genes to points for writing
         // rather than duplicating logic for file output
         BiFunction<Integer, Integer, double[]> decodeCartesian = (g1, g2) -> {
-            double x = mapBinary(g1, Parameters.geneSize, 0.0, 1.0);
-            double y = mapBinary(g2, Parameters.geneSize, 0.0, 1.0);
+            double x = mapBinary(g1, Parameters.geneSize, -1.0, 1.0);
+            double y = mapBinary(g2, Parameters.geneSize, -1.0, 1.0);
             return new double[] { x, y };
         };
         BiFunction<Integer, Integer, double[]> decodePolar = (g1, g2) -> {
@@ -170,22 +173,21 @@ public class PointScatter extends FitnessFunction {
             System.exit(0);
         }
 
-        Chromo bestChromo = Search.bestOverAllChromo;
-
         try {
-            FileWriter bestFit = new FileWriter("best_fit.csv");
+            FileWriter fwriter = new FileWriter(fname);
 
             for (int i = 0; i < Parameters.numGenes; i += 2) {
-                double[] points = decodeGenes.apply(bestChromo.getPosIntGeneValue(i),
-                        bestChromo.getPosIntGeneValue(i + 1));
-                bestFit.write(Double.toString(points[0]));
-                bestFit.write(" ");
-                bestFit.write(Double.toString(points[1]));
-                bestFit.write("\n");
+                double[] points = decodeGenes.apply(chromo.getPosIntGeneValue(i),
+                        chromo.getPosIntGeneValue(i + 1));
+                fwriter.write(Double.toString(points[0]));
+                fwriter.write(" ");
+                fwriter.write(Double.toString(points[1]));
+                fwriter.write("\n");
             }
 
-            bestFit.close();
+            fwriter.close();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             System.out.println("Error writing best fit to file");
         }
     }

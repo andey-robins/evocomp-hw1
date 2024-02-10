@@ -303,6 +303,15 @@ public class Search {
 					sumProFitness = sumProFitness + member[i].proFitness;
 				}
 
+				// save one of the generations at random for animation
+				// 87 chosen by random die roll
+				if (R == 27) {
+					PointScatter.writeChromoToCsv(
+							String.format("../data/%s/%s/%s.csv", Parameters.dataRepresentation,
+									Parameters.numGenes, G),
+							bestOfGenChromo);
+				}
+
 				// *********************************************************************
 				// ************ CROSSOVER AND CREATE NEXT GENERATION *******************
 				// *********************************************************************
