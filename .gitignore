@@ -5,6 +5,7 @@
 *.log
 *.out
 *.txt
+*.csv
 
 # BlueJ files
 *.ctxt
