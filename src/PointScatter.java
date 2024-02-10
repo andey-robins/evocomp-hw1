@@ -37,16 +37,16 @@ public class PointScatter extends FitnessFunction {
         	}
         } else if (Parameters.dataRepresentation.equals("thetamagpolar")){
     		for (int i = 0; i < Parameters.numGenes; i += 2) {
-        		double theta1 = X.getPosIntGeneValue(i) * (2 * Math.PI / 360);
-        		double r1 = X.getPosIntGeneValue(i + 1);
+    			double point1AngleInRadians = mapBinary(X.getPosIntGeneValue(i), Parameters.geneSize, 0.0, 2.0 * Math.PI);
+                	double point1DistanceFromOrigin = mapBinary(X.getPosIntGeneValue(i + 1), Parameters.geneSize, 0.0, 1.0);
+        		
         		for (int j = i + 2; j < Parameters.numGenes; j += 2) {
-            			double theta2 = X.getPosIntGeneValue(j) * (2 * Math.PI / 360);
-            			double r2 = X.getPosIntGeneValue(j + 1);
+        			double point2AngleInRadians = mapBinary(X.getPosIntGeneValue(j), Parameters.geneSize, 0.0, 2.0 * Math.PI);
+                		double point2DistanceFromOrigin = mapBinary(X.getPosIntGeneValue(j + 1), Parameters.geneSize, 0.0, 1.0);
+                		
+            			double distanceBetweenPoints1And2 = polarDistance(point1AngleInRadians, point1DistanceFromOrigin, point2AngleInRadians, point2DistanceFromOrigin);
 
-            			double d = polarDistance(theta1, r1, theta2, r2);
-            			if (d < X.rawFitness) {
-                			X.rawFitness = d;
-            			}
+                    		if(distanceBetweenPoints1And2 < X.rawFitness) X.rawFitness = distanceBetweenPoints1And2;
         		}
         	}
         } else if(Parameters.dataRepresentation.equals("degrees")) {
@@ -119,6 +119,25 @@ public static double polarDistance(double theta1, double r1, double theta2, doub
                     bestFit.write(Double.toString(distance * Math.cos(degree * Math.PI / 180.0)));
                     bestFit.write(" ");
                     bestFit.write(Double.toString(distance * Math.sin(degree * Math.PI / 180.0)));
+                    bestFit.write("\n");
+                }
+
+                bestFit.close();
+            } catch(Exception e) {}
+        }
+        else if(Parameters.dataRepresentation.equals("thetamagpolar")) {
+            Chromo bestChromo = Search.bestOverAllChromo;
+
+            try {
+                FileWriter bestFit = new FileWriter("best_fit.csv");
+
+                for(int i = 0; i < Parameters.numGenes; i += 2) {
+                    double radians = mapBinary(bestChromo.getPosIntGeneValue(i), Parameters.geneSize, 0.0, 2.0 * Math.PI);
+                    double distance = mapBinary(bestChromo.getPosIntGeneValue(i + 1), Parameters.geneSize, 0.0, 1.0);
+
+                    bestFit.write(Double.toString(distance * Math.cos(radians)));
+                    bestFit.write(" ");
+                    bestFit.write(Double.toString(distance * Math.sin(radians)));
                     bestFit.write("\n");
                 }
 
