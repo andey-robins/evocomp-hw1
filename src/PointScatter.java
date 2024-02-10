@@ -20,70 +20,88 @@ public class PointScatter extends FitnessFunction {
         }
 
         X.rawFitness = Double.MAX_VALUE;
-        
-        
-        if (Parameters.dataRepresentation.equals("xycart")){
-        	for (int i = 0; i < Parameters.numGenes; i += 2) {
-            		int x1 = X.getPosIntGeneValue(i);
-            		int y1 = X.getPosIntGeneValue(i + 1);
-            		for (int j = i + 2; j < Parameters.numGenes; j += 2) {
-                		int x2 = X.getPosIntGeneValue(j);
-                		int y2 = X.getPosIntGeneValue(j + 1);
-                		double d = distanceBetweenPoints(x1, y1, x2, y2);
-                		if (d < X.rawFitness) {
-                    		X.rawFitness = d;
-                		}
-            		}
-        	}
-        } else if (Parameters.dataRepresentation.equals("thetamagpolar")){
-    		for (int i = 0; i < Parameters.numGenes; i += 2) {
-    			double point1AngleInRadians = mapBinary(X.getPosIntGeneValue(i), Parameters.geneSize, 0.0, 2.0 * Math.PI);
-                	double point1DistanceFromOrigin = mapBinary(X.getPosIntGeneValue(i + 1), Parameters.geneSize, 0.0, 1.0);
-        		
-        		for (int j = i + 2; j < Parameters.numGenes; j += 2) {
-        			double point2AngleInRadians = mapBinary(X.getPosIntGeneValue(j), Parameters.geneSize, 0.0, 2.0 * Math.PI);
-                		double point2DistanceFromOrigin = mapBinary(X.getPosIntGeneValue(j + 1), Parameters.geneSize, 0.0, 1.0);
-                		
-            			double distanceBetweenPoints1And2 = polarDistance(point1AngleInRadians, point1DistanceFromOrigin, point2AngleInRadians, point2DistanceFromOrigin);
 
-                    		if(distanceBetweenPoints1And2 < X.rawFitness) X.rawFitness = distanceBetweenPoints1And2;
-        		}
-        	}
-        } else if(Parameters.dataRepresentation.equals("degrees")) {
-            for(int i = 0; i < Parameters.numGenes; i += 2) {
+        if (Parameters.dataRepresentation.equals("xycart")) {
+            for (int i = 0; i < Parameters.numGenes; i += 2) {
+                double x1 = mapBinary(X.getPosIntGeneValue(i), Parameters.geneSize, 0.0, 1.0);
+                double y1 = mapBinary(X.getPosIntGeneValue(i + 1), Parameters.geneSize, 0.0, 1.0);
+
+                if (isOutsideUnitCircle(x1, y1)) {
+                    X.rawFitness = 0.0;
+                    return;
+                }
+
+                for (int j = i + 2; j < Parameters.numGenes; j += 2) {
+                    double x2 = mapBinary(X.getPosIntGeneValue(j), Parameters.geneSize, 0.0, 1.0);
+                    double y2 = mapBinary(X.getPosIntGeneValue(j + 1), Parameters.geneSize, 0.0, 1.0);
+
+                    if (isOutsideUnitCircle(x2, y2)) {
+                        X.rawFitness = 0.0;
+                        return;
+                    }
+
+                    double d = distanceBetweenPoints(x1, y1, x2, y2);
+                    if (d < X.rawFitness) {
+                        X.rawFitness = d;
+                    }
+                }
+            }
+        } else if (Parameters.dataRepresentation.equals("thetamagpolar")) {
+            for (int i = 0; i < Parameters.numGenes; i += 2) {
+                double point1AngleInRadians = mapBinary(X.getPosIntGeneValue(i), Parameters.geneSize, 0.0,
+                        2.0 * Math.PI);
+                double point1DistanceFromOrigin = mapBinary(X.getPosIntGeneValue(i + 1), Parameters.geneSize, 0.0, 1.0);
+
+                for (int j = i + 2; j < Parameters.numGenes; j += 2) {
+                    double point2AngleInRadians = mapBinary(X.getPosIntGeneValue(j), Parameters.geneSize, 0.0,
+                            2.0 * Math.PI);
+                    double point2DistanceFromOrigin = mapBinary(X.getPosIntGeneValue(j + 1), Parameters.geneSize, 0.0,
+                            1.0);
+
+                    double distanceBetweenPoints1And2 = polarDistance(point1AngleInRadians, point1DistanceFromOrigin,
+                            point2AngleInRadians, point2DistanceFromOrigin);
+
+                    if (distanceBetweenPoints1And2 < X.rawFitness)
+                        X.rawFitness = distanceBetweenPoints1And2;
+                }
+            }
+        } else if (Parameters.dataRepresentation.equals("degrees")) {
+            for (int i = 0; i < Parameters.numGenes; i += 2) {
                 // First gene represents degrees [0, 360]
                 double degree = mapBinary(X.getPosIntGeneValue(i), Parameters.geneSize, 0.0, 360.0);
                 // Second gene represents distance [0.0, 1.0]
                 double distance = mapBinary(X.getPosIntGeneValue(i + 1), Parameters.geneSize, 0.0, 1.0);
 
-                for(int j = i + 2; j < Parameters.numGenes; j += 2) {
+                for (int j = i + 2; j < Parameters.numGenes; j += 2) {
                     double d = polarDistance(degree * Math.PI / 180.0, distance,
-                    mapBinary(X.getPosIntGeneValue(j), Parameters.geneSize, 0.0, 360.0) * Math.PI / 180.0,
-                    mapBinary(X.getPosIntGeneValue(j + 1), Parameters.geneSize, 0.0, 1.0));
+                            mapBinary(X.getPosIntGeneValue(j), Parameters.geneSize, 0.0, 360.0) * Math.PI / 180.0,
+                            mapBinary(X.getPosIntGeneValue(j + 1), Parameters.geneSize, 0.0, 1.0));
 
-                    if(d < X.rawFitness) X.rawFitness = d;
+                    if (d < X.rawFitness)
+                        X.rawFitness = d;
                 }
             }
+        } else {
+            System.out.println(
+                    "Error: Invalid data representation parameter\nValid parameters are: `xycart`, `thetamagpolar`, and `degrees`");
+            System.exit(0);
         }
-    	else {
-    		System.out.println("Error: Invalid data representation parameter\nValid parameters are: `xycart`, `thetamagpolar`, and `degrees`");
-        	System.exit(0);
-    	}
-}
+    }
+
     public static double mapBinary(int geneValue, int bits, double min, double max) {
         // Map an integer gene value into a double of range [min, max]
         // This normalization is only safe up to ~30 bits since Java uses signed ints
-        return (double)geneValue / ((1 << bits) - 1) * (max - min) + min;
+        return (double) geneValue / ((1 << bits) - 1) * (max - min) + min;
     }
 
-public static double polarDistance(double theta1, double r1, double theta2, double r2) {
-    double x1 = r1 * Math.cos(theta1);
-    double y1 = r1 * Math.sin(theta1);
-    double x2 = r2 * Math.cos(theta2);
-    double y2 = r2 * Math.sin(theta2);
+    public static double polarDistance(double theta1, double r1, double theta2, double r2) {
+        double x1 = r1 * Math.cos(theta1);
+        double y1 = r1 * Math.sin(theta1);
+        double x2 = r2 * Math.cos(theta2);
+        double y2 = r2 * Math.sin(theta2);
 
-    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-}
+        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+    }
 
     // doPrintGenes is duplicated from the OneMax class
     public void doPrintGenes(Chromo X, FileWriter output) throws IOException {
@@ -100,19 +118,24 @@ public static double polarDistance(double theta1, double r1, double theta2, doub
         return;
     }
 
-    public static double distanceBetweenPoints(int x1, int y1, int x2, int y2) {
+    public static double distanceBetweenPoints(double x1, double y1, double x2, double y2) {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
 
+    public static boolean isOutsideUnitCircle(double x, double y) {
+        return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) > 1.0;
+    }
+
     public void onFinish() {
-        // Only outputting .csv of best fit for (degrees, distance) representation currently
-        if(Parameters.dataRepresentation.equals("degrees")) {
+        // Only outputting .csv of best fit for (degrees, distance) representation
+        // currently
+        if (Parameters.dataRepresentation.equals("degrees")) {
             Chromo bestChromo = Search.bestOverAllChromo;
 
             try {
                 FileWriter bestFit = new FileWriter("best_fit.csv");
 
-                for(int i = 0; i < Parameters.numGenes; i += 2) {
+                for (int i = 0; i < Parameters.numGenes; i += 2) {
                     double degree = mapBinary(bestChromo.getPosIntGeneValue(i), Parameters.geneSize, 0.0, 360.0);
                     double distance = mapBinary(bestChromo.getPosIntGeneValue(i + 1), Parameters.geneSize, 0.0, 1.0);
 
@@ -123,16 +146,17 @@ public static double polarDistance(double theta1, double r1, double theta2, doub
                 }
 
                 bestFit.close();
-            } catch(Exception e) {}
-        }
-        else if(Parameters.dataRepresentation.equals("thetamagpolar")) {
+            } catch (Exception e) {
+            }
+        } else if (Parameters.dataRepresentation.equals("thetamagpolar")) {
             Chromo bestChromo = Search.bestOverAllChromo;
 
             try {
                 FileWriter bestFit = new FileWriter("best_fit.csv");
 
-                for(int i = 0; i < Parameters.numGenes; i += 2) {
-                    double radians = mapBinary(bestChromo.getPosIntGeneValue(i), Parameters.geneSize, 0.0, 2.0 * Math.PI);
+                for (int i = 0; i < Parameters.numGenes; i += 2) {
+                    double radians = mapBinary(bestChromo.getPosIntGeneValue(i), Parameters.geneSize, 0.0,
+                            2.0 * Math.PI);
                     double distance = mapBinary(bestChromo.getPosIntGeneValue(i + 1), Parameters.geneSize, 0.0, 1.0);
 
                     bestFit.write(Double.toString(distance * Math.cos(radians)));
@@ -142,7 +166,8 @@ public static double polarDistance(double theta1, double r1, double theta2, doub
                 }
 
                 bestFit.close();
-            } catch(Exception e) {}
+            } catch (Exception e) {
+            }
         }
     }
 }
