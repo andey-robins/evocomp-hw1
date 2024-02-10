@@ -4,7 +4,8 @@
 # Log files
 *.log
 *.out
-*.txt
+src/summaries/*.txt
+src/*.txt
 *.csv
 
 # BlueJ files
