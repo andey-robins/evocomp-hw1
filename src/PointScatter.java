@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.function.BiFunction;
 
 public class PointScatter extends FitnessFunction {
 
@@ -126,48 +127,66 @@ public class PointScatter extends FitnessFunction {
         return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) > 1.0;
     }
 
+    /**
+     * Perform any necessary clean up after the fitness function has finished
+     * 
+     * Currently only writes best fit information to best_fit.csv
+     */
     public void onFinish() {
-        // Only outputting .csv of best fit for (degrees, distance) representation
-        // currently
+
+        // Define generic functions for converting from genes to points for writing
+        // rather than duplicating logic for file output
+        BiFunction<Integer, Integer, double[]> decodeCartesian = (g1, g2) -> {
+            double x = mapBinary(g1, Parameters.geneSize, 0.0, 1.0);
+            double y = mapBinary(g2, Parameters.geneSize, 0.0, 1.0);
+            return new double[] { x, y };
+        };
+        BiFunction<Integer, Integer, double[]> decodePolar = (g1, g2) -> {
+            double theta = mapBinary(g1, Parameters.geneSize, 0.0, 2.0 * Math.PI);
+            double r = mapBinary(g2, Parameters.geneSize, 0.0, 1.0);
+            double p1 = r * Math.cos(theta);
+            double p2 = r * Math.sin(theta);
+            return new double[] { p1, p2 };
+        };
+        BiFunction<Integer, Integer, double[]> decodeDegrees = (g1, g2) -> {
+            double degree = mapBinary(g1, Parameters.geneSize, 0.0, 360.0);
+            double distance = mapBinary(g2, Parameters.geneSize, 0.0, 1.0);
+            double p1 = distance * Math.cos(degree * Math.PI / 180.0);
+            double p2 = distance * Math.sin(degree * Math.PI / 180.0);
+            return new double[] { p1, p2 };
+        };
+
+        BiFunction<Integer, Integer, double[]> decodeGenes = null;
+
         if (Parameters.dataRepresentation.equals("degrees")) {
-            Chromo bestChromo = Search.bestOverAllChromo;
-
-            try {
-                FileWriter bestFit = new FileWriter("best_fit.csv");
-
-                for (int i = 0; i < Parameters.numGenes; i += 2) {
-                    double degree = mapBinary(bestChromo.getPosIntGeneValue(i), Parameters.geneSize, 0.0, 360.0);
-                    double distance = mapBinary(bestChromo.getPosIntGeneValue(i + 1), Parameters.geneSize, 0.0, 1.0);
-
-                    bestFit.write(Double.toString(distance * Math.cos(degree * Math.PI / 180.0)));
-                    bestFit.write(" ");
-                    bestFit.write(Double.toString(distance * Math.sin(degree * Math.PI / 180.0)));
-                    bestFit.write("\n");
-                }
-
-                bestFit.close();
-            } catch (Exception e) {
-            }
+            decodeGenes = decodeDegrees;
         } else if (Parameters.dataRepresentation.equals("thetamagpolar")) {
-            Chromo bestChromo = Search.bestOverAllChromo;
+            decodeGenes = decodePolar;
+        } else if (Parameters.dataRepresentation.equals("xycart")) {
+            decodeGenes = decodeCartesian;
+        } else {
+            System.out.println(
+                    "Error: Invalid data representation parameter\nValid parameters are: `xycart`, `thetamagpolar`, and `degrees`");
+            System.exit(0);
+        }
 
-            try {
-                FileWriter bestFit = new FileWriter("best_fit.csv");
+        Chromo bestChromo = Search.bestOverAllChromo;
 
-                for (int i = 0; i < Parameters.numGenes; i += 2) {
-                    double radians = mapBinary(bestChromo.getPosIntGeneValue(i), Parameters.geneSize, 0.0,
-                            2.0 * Math.PI);
-                    double distance = mapBinary(bestChromo.getPosIntGeneValue(i + 1), Parameters.geneSize, 0.0, 1.0);
+        try {
+            FileWriter bestFit = new FileWriter("best_fit.csv");
 
-                    bestFit.write(Double.toString(distance * Math.cos(radians)));
-                    bestFit.write(" ");
-                    bestFit.write(Double.toString(distance * Math.sin(radians)));
-                    bestFit.write("\n");
-                }
-
-                bestFit.close();
-            } catch (Exception e) {
+            for (int i = 0; i < Parameters.numGenes; i += 2) {
+                double[] points = decodeGenes.apply(bestChromo.getPosIntGeneValue(i),
+                        bestChromo.getPosIntGeneValue(i + 1));
+                bestFit.write(Double.toString(points[0]));
+                bestFit.write(" ");
+                bestFit.write(Double.toString(points[1]));
+                bestFit.write("\n");
             }
+
+            bestFit.close();
+        } catch (Exception e) {
+            System.out.println("Error writing best fit to file");
         }
     }
 }
