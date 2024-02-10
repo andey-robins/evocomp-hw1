@@ -47,6 +47,8 @@ class FitnessFunction {
 		System.out.println("Executing FF Gene Output");
 	}
 
+	public void onFinish() {}
+
 	/*******************************************************************************
 	 * STATIC METHODS *
 	 *******************************************************************************/

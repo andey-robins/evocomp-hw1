@@ -373,6 +373,7 @@ public class Search {
 		Date endTime = dateAndTime.getTime();
 		System.out.println("End  :  " + endTime);
 
+		problem.onFinish();
 	} // End of Main Class
 
 } // End of Search.Java ******************************************************
