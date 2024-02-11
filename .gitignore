@@ -1,8 +1,12 @@
 # Compiled class file
 *.class
 
-# Log file
+# Log files
 *.log
+*.out
+src/summaries/*.txt
+src/*.txt
+*.csv
 
 # BlueJ files
 *.ctxt
@@ -24,3 +28,6 @@ hs_err_pid*
 replay_pid*
 
 .DS_Store
+
+visualization/frames/*
+venv/
