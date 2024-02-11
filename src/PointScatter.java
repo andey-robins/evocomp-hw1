@@ -133,10 +133,10 @@ public class PointScatter extends FitnessFunction {
      * Currently only writes best fit information to best_fit.csv
      */
     public void onFinish() {
-        writeChromoToCsv("best_fit.csv", Search.bestOverAllChromo);
+        writeChromoToCsv("best_fit.csv", "average_stats.csv", Search.bestOverAllChromo);
     }
 
-    public static void writeChromoToCsv(String fname, Chromo chromo) {
+    public static void writeChromoToCsv(String fname, String statsFilename, Chromo chromo) {
         // Define generic functions for converting from genes to points for writing
         // rather than duplicating logic for file output
         BiFunction<Integer, Integer, double[]> decodeCartesian = (g1, g2) -> {
@@ -186,6 +186,31 @@ public class PointScatter extends FitnessFunction {
             }
 
             fwriter.close();
+
+            // Compute average average w/ std deviation
+            FileWriter statsWriter = new FileWriter(statsFilename);
+
+            if(statsWriter != null) { // Hacky way to ensure average stats aren't calculated for animations
+                for(int i = 0; i < Parameters.numRuns; ++i) {
+                    double averageMean = 0.0;
+                    for(int j = 0; j < Parameters.generations; ++j) {
+                        averageMean += Search.averageStats[i][j];
+                    }
+
+                    averageMean /= Parameters.generations;
+
+                    double stdDeviation = 0.0;
+                    for(int j = 0; j < Parameters.generations; ++j) {
+                        stdDeviation += Math.pow(Search.averageStats[i][j] - averageMean, 2);
+                    }
+
+                    stdDeviation = Math.sqrt(stdDeviation / (Parameters.generations - 1));
+
+                    
+                    statsWriter.write(Double.toString(averageMean) + " " + Double.toString(stdDeviation) + "\n");
+                }
+            }
+            
         } catch (Exception e) {
             System.out.println(e.getMessage());
             System.out.println("Error writing best fit to file");

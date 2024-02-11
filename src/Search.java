@@ -54,6 +54,7 @@ public class Search {
 	private static double TmemberFitness;
 
 	private static double fitnessStats[][]; // 0=Avg, 1=Best
+	public static double averageStats[][]; // 0=Run, 1=Gen
 
 	/*******************************************************************************
 	 * CONSTRUCTORS *
@@ -86,6 +87,13 @@ public class Search {
 		for (int i = 0; i < Parameters.generations; i++) {
 			fitnessStats[0][i] = 0;
 			fitnessStats[1][i] = 0;
+		}
+		
+		averageStats = new double[Parameters.numRuns][Parameters.generations];
+		for(int i = 0; i < Parameters.numRuns; ++i) {
+			for(int j = 0; j < Parameters.generations; ++j) {
+				averageStats[i][j] = 0.0;
+			}
 		}
 
 		// Problem Specific Setup - For new new fitness function problems, create
@@ -192,6 +200,8 @@ public class Search {
 				// Accumulate fitness statistics
 				fitnessStats[0][G] += sumRawFitness / Parameters.popSize;
 				fitnessStats[1][G] += bestOfGenChromo.rawFitness;
+
+				averageStats[R - 1][G] = (sumRawFitness / Parameters.popSize);
 
 				averageRawFitness = sumRawFitness / Parameters.popSize;
 				stdevRawFitness = Math.sqrt(
@@ -309,6 +319,7 @@ public class Search {
 					PointScatter.writeChromoToCsv(
 							String.format("../data/%s/%s/%s.csv", Parameters.dataRepresentation,
 									Parameters.numGenes, G),
+							null,
 							bestOfGenChromo);
 				}
 
